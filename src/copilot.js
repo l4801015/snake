@@ -8,22 +8,11 @@
 
 
 
+const n = 11;
+const gZ = n => n > 0;
+const l10 = n => n < 10;
+const gl10 = n => gZ(n) && l10(n);
 
-
-
-
-
-
-
-
-
-// find relation 
-// input: 1, 2, 3, 4, 5, 6
-// output: 3, 6, 9, 12, 15, 18
-function findRelation(arr) {
-		let result = [];
-		for (let i = 0; i < arr.length; i++) {
-				result.push(arr[i] * 3);
-		}
-		return result;
+for (let i = n; gl10(i); i++) {
+	console.log(i);
 }

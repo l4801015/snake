@@ -44,7 +44,6 @@ const loop = () => {
 		snake.update();
 		snake.show();
 		if (snake.isEating(food)) {
-			snake.grow();
 			food.update();
 		}
 		food.show();
