@@ -1,5 +1,5 @@
-import VConsole from "vconsole";
-const vConsole = new VConsole();
+//import VConsole from "vconsole";
+//const vConsole = new VConsole();
 
 import { Canvas } from "./Canvas";
 import { Vector } from "./Vector";
@@ -16,13 +16,13 @@ const rows = floor(height / size);
 const canvas = new Canvas(width, height);
 const ctx = canvas.init();
 const options = {
-  width: width,
+	width: width,
 	height: height,
 	size: size,
 	cols: cols,
 	rows: rows,
-  ctx: ctx
-}
+	ctx: ctx,
+};
 const snake = new Snake(options);
 const food = new Food(options);
 const fps = new FPS(4);
@@ -34,26 +34,31 @@ const setup = () => {
 
 let then = performance.now();
 const loop = () => {
-  const interval = 1000 / fps.getFPS();
+	const interval = 1000 / fps.getFPS();
 	const now = performance.now();
 	const delta = now - then;
 	if (delta > interval) {
 		then = now - (delta % interval);
 		canvas.clear();
 		canvas.drawGrid(size);
-		snake.update();
+		snake.update(fps);
 		snake.show();
+		snake.showScore();
+		fps.showFPS(ctx);
 		if (snake.isEating(food)) {
 			food.update();
+			if (snake.getScore() % 3 === 0) {
+				fps.increment();
+			}
 		}
 		food.show();
 	}
+
 	requestAnimationFrame(loop);
-}
+};
 
 setup();
 loop();
-
 
 const left = document.createElement("button");
 left.innerHTML = "Left";
@@ -118,7 +123,7 @@ document.body.appendChild(down);
 const fpsUp = document.createElement("button");
 fpsUp.innerHTML = "FPS U";
 fpsUp.addEventListener("click", () => {
-	fps.setFPS(fps.getFPS() + 2);
+	fps.increment();
 });
 fpsUp.style.position = "absolute";
 fpsUp.style.top = "20px";
@@ -133,7 +138,7 @@ document.body.appendChild(fpsUp);
 const fpsDown = document.createElement("button");
 fpsDown.innerHTML = "FPS D";
 fpsDown.addEventListener("click", () => {
-	fps.setFPS(fps.getFPS() - 2);
+	fps.decrement();
 });
 fpsDown.style.position = "absolute";
 fpsDown.style.top = "70px";
@@ -145,3 +150,14 @@ fpsDown.style.border = "1px solid #000";
 fpsDown.style.borderRadius = "5px";
 document.body.appendChild(fpsDown);
 
+document.addEventListener("keydown", (e) => {
+	if (e.keyCode === 38) {
+		snake.setDirection(new Vector(0, -20));
+	} else if (e.keyCode === 40) {
+		snake.setDirection(new Vector(0, 20));
+	} else if (e.keyCode === 37) {
+		snake.setDirection(new Vector(-20, 0));
+	} else if (e.keyCode === 39) {
+		snake.setDirection(new Vector(20, 0));
+	}
+});

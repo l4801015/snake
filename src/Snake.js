@@ -10,6 +10,7 @@ export function Snake(options) {
 	this.rows = options.rows;
 	this.total = 0;
 	this.tail = [];
+
 }
 
 Snake.prototype.show = function () {
@@ -34,7 +35,7 @@ Snake.prototype.show = function () {
 	this.ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
 };
 
-Snake.prototype.update = function () {
+Snake.prototype.update = function (fps) {
 	for (let i = 0; i < this.tail.length - 1; i++) {
 		this.tail[i] = this.tail[i + 1];
 	}
@@ -44,6 +45,7 @@ Snake.prototype.update = function () {
 	this.pos.add(this.dir);
 	if (this.isDead()) {
 		this.reset();
+		fps.reset();
 	}
 };
 
@@ -78,4 +80,14 @@ Snake.prototype.reset = function () {
 	this.tail = [];
 	this.pos = new Vector(0, 0);
 	this.dir = new Vector(20, 0);
+}
+
+Snake.prototype.showScore = function () {
+	this.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+	this.ctx.font = "20px Arial";
+	this.ctx.fillText("Score: " + this.total, 10, 30);
+}
+
+Snake.prototype.getScore = function () {
+	return this.total;
 }
